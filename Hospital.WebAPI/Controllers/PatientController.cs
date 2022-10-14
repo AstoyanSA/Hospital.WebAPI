@@ -21,7 +21,7 @@ public class PatientController : ControllerBase
 	{
 		var result = await _patientRepository.GetPatientsAsync();
 
-		return Ok(result);
+        return Ok(result);
 	}
 
 	[HttpGet("{id:int}")]

@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Hospital.Shared;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
-namespace Hospital.Shared;
+namespace Hospital.WebAPI.Dtos;
 
-public class Patient
+public class PatientDto
 {
-    [JsonIgnore]
     public int Id { get; set; }
     public string Surname { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
@@ -15,7 +16,6 @@ public class Patient
     [Column(TypeName = "date")]
     public DateTime Birthday { get; set; }
     public string Sex { get; set; } = string.Empty;
-    public int AreaId { get; set; }
-    [JsonIgnore]
-    public Area? Area { get; set; }
+    public int AreaNumber { get; set; }
+
 }

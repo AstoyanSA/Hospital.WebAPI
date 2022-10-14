@@ -1,6 +1,9 @@
 ﻿using Hospital.Shared;
 using Hospital.WebAPI.Data.Interfaces;
+using Hospital.WebAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace Hospital.WebAPI.Data;
 
@@ -13,11 +16,39 @@ public class PatientRepository : IPatientRepository
         _db = db;
     }
 
-    public async Task<ServiceResponse<List<Patient>>> GetPatientsAsync()
+    public async Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync()
     {
-        var response = new ServiceResponse<List<Patient>>
+        var query = await (from p in _db.Patients
+                           join a in _db.Areas on p.AreaId equals a.Id
+                           select new
+                           {
+                               p.Surname,
+                               p.FirstName,
+                               p.MiddleName,
+                               p.Address,
+                               p.Birthday,
+                               p.Sex,
+                               a.Number
+                           }).ToListAsync();
+
+        List<PatientDto> patientDto = new();
+
+        foreach(var q in query)
         {
-            Data = await _db.Patients.Include(x=>x.Area).ToListAsync()
+            patientDto.Add(new PatientDto {
+                Surname = q.Surname,
+                FirstName = q.FirstName,
+                MiddleName = q.MiddleName,
+                Address = q.Address,
+                Birthday = q.Birthday,
+                Sex = q.Sex,
+                AreaNumber = q.Number
+            });
+        }
+
+        var response = new ServiceResponse<List<PatientDto>>
+        {
+            Data = patientDto
         };
 
         return response;
@@ -58,9 +89,13 @@ public class PatientRepository : IPatientRepository
         var response = new ServiceResponse<string>();
         try
         {
-            if (_db.Patients.Any(x => x.FirstName.ToLower().Equals(patient.FirstName.ToLower()) &&
-                                      x.Surname.ToLower().Equals(patient.Surname.ToLower()) &&
-                                      x.MiddleName.ToLower().Equals(patient.MiddleName.ToLower())))
+            if (_db.Patients.Any(x => x.Surname.ToLower().Equals(patient.Surname.ToLower()) &&
+                                 x.FirstName.ToLower().Equals(patient.FirstName.ToLower()) &&
+                                 x.MiddleName.ToLower().Equals(patient.MiddleName.ToLower()) &&
+                                 x.Address.ToLower().Trim().Equals(patient.Address.ToLower()) &&
+                                 x.Birthday == patient.Birthday &&
+                                 x.Sex.Equals(patient.Sex) &&
+                                 x.AreaId == patient.AreaId))
             {
                 response.Success = false;
                 response.Message = "Не удалось добавить, такой пациент уже существует.";
@@ -89,13 +124,13 @@ public class PatientRepository : IPatientRepository
         try
         {
             if (_db.Patients.Any(x => x.Id != patient.Id &&
-                             x.FirstName.ToLower().Equals(patient.FirstName.ToLower()) &&
-                             x.Surname.ToLower().Equals(patient.Surname.ToLower()) &&
-                             x.MiddleName.ToLower().Equals(patient.MiddleName.ToLower()) &&
-                             x.Address.ToLower().Trim().Equals(patient.Address.ToLower()) &&
-                             x.Birthday == patient.Birthday &&
-                             x.Sex.Equals(patient.Sex) &&
-                             x.AreaId == patient.AreaId))
+                                 x.Surname.ToLower().Equals(patient.Surname.ToLower()) &&
+                                 x.FirstName.ToLower().Equals(patient.FirstName.ToLower()) &&
+                                 x.MiddleName.ToLower().Equals(patient.MiddleName.ToLower()) &&
+                                 x.Address.ToLower().Trim().Equals(patient.Address.ToLower()) &&
+                                 x.Birthday == patient.Birthday &&
+                                 x.Sex.Equals(patient.Sex) &&
+                                 x.AreaId == patient.AreaId))
             {
                 response.Success = false;
                 response.Message = "Пациент с такими данными уже существует.";
@@ -106,8 +141,8 @@ public class PatientRepository : IPatientRepository
 
                 if (pat != null)
                 {
-                    pat.FirstName = patient.FirstName;
                     pat.Surname = patient.Surname;
+                    pat.FirstName = patient.FirstName;
                     pat.MiddleName = patient.MiddleName;
                     pat.Address = patient.Address;
                     pat.Birthday = patient.Birthday;
