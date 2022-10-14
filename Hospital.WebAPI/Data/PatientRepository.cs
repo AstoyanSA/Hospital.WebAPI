@@ -63,7 +63,7 @@ public class PatientRepository : IPatientRepository
                                       x.MiddleName.Equals(patient.MiddleName, StringComparison.OrdinalIgnoreCase)))
             {
                 response.Success = false;
-                response.Message = "Не удалось добавить (пациент уже существует).";
+                response.Message = "Не удалось добавить, такой пациент уже существует.";
             }
             else
             {
@@ -114,12 +114,12 @@ public class PatientRepository : IPatientRepository
                     pat.Sex = patient.Sex;
                     pat.AreaId = patient.AreaId;
 
-                    response.Data = "Пациент добавлен.";
+                    response.Data = "Данные пациента обновлены";
                 }
                 else
                 {
                     response.Success = false;
-                    response.Message = "Такого пациента не существует";
+                    response.Message = "Такого пациента не существует.";
                 }
             }
 
