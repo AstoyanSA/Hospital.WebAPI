@@ -58,7 +58,7 @@ public class DoctorRepository : IDoctorRepository
         var response = new ServiceResponse<string>();
         try
         {
-            if (_db.Doctors.Any(x => x.FullName.Trim().Equals(doctor.FullName.Trim(), StringComparison.OrdinalIgnoreCase)))
+            if (_db.Doctors.Any(x => x.FullName.Trim().ToLower().Equals(doctor.FullName.Trim().ToLower())))
             {
                 response.Success = false;
                 response.Message = "Не удалось добавить, такой врач уже существует.";
@@ -86,7 +86,7 @@ public class DoctorRepository : IDoctorRepository
         var response = new ServiceResponse<string>();
         try
         {
-            if (_db.Doctors.Any(x => x.FullName.Trim().Equals(doctor.FullName.Trim(), StringComparison.OrdinalIgnoreCase)))
+            if (_db.Doctors.Any(x => x.FullName.Trim().ToLower().Equals(doctor.FullName.Trim().ToLower())))
             {
                 response.Success = false;
                 response.Message = "Врач с такими данными уже существует.";

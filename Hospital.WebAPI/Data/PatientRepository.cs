@@ -17,7 +17,7 @@ public class PatientRepository : IPatientRepository
     {
         var response = new ServiceResponse<List<Patient>>
         {
-            Data = await _db.Patients.ToListAsync()
+            Data = await _db.Patients.Include(x=>x.Area).ToListAsync()
         };
 
         return response;
@@ -58,9 +58,9 @@ public class PatientRepository : IPatientRepository
         var response = new ServiceResponse<string>();
         try
         {
-            if (_db.Patients.Any(x => x.FirstName.Equals(patient.FirstName, StringComparison.OrdinalIgnoreCase) &&
-                                      x.Surname.Equals(patient.Surname, StringComparison.OrdinalIgnoreCase) &&
-                                      x.MiddleName.Equals(patient.MiddleName, StringComparison.OrdinalIgnoreCase)))
+            if (_db.Patients.Any(x => x.FirstName.ToLower().Equals(patient.FirstName.ToLower()) &&
+                                      x.Surname.ToLower().Equals(patient.Surname.ToLower()) &&
+                                      x.MiddleName.ToLower().Equals(patient.MiddleName.ToLower())))
             {
                 response.Success = false;
                 response.Message = "Не удалось добавить, такой пациент уже существует.";
@@ -89,10 +89,10 @@ public class PatientRepository : IPatientRepository
         try
         {
             if (_db.Patients.Any(x => x.Id != patient.Id &&
-                             x.FirstName.Equals(patient.FirstName, StringComparison.OrdinalIgnoreCase) &&
-                             x.Surname.Equals(patient.Surname, StringComparison.OrdinalIgnoreCase) &&
-                             x.MiddleName.Equals(patient.MiddleName, StringComparison.OrdinalIgnoreCase) &&
-                             x.Address.Trim().Equals(patient.Address, StringComparison.OrdinalIgnoreCase) &&
+                             x.FirstName.ToLower().Equals(patient.FirstName.ToLower()) &&
+                             x.Surname.ToLower().Equals(patient.Surname.ToLower()) &&
+                             x.MiddleName.ToLower().Equals(patient.MiddleName.ToLower()) &&
+                             x.Address.ToLower().Trim().Equals(patient.Address.ToLower()) &&
                              x.Birthday == patient.Birthday &&
                              x.Sex.Equals(patient.Sex) &&
                              x.AreaId == patient.AreaId))
