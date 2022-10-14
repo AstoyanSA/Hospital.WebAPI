@@ -1,6 +1,6 @@
 ﻿using Hospital.Shared;
 
-namespace Hospital.WebAPI.Data
+namespace Hospital.WebAPI.Data.Interfaces
 {
     public interface IDoctorRepository
     {

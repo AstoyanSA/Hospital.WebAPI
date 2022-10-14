@@ -1,4 +1,5 @@
 ﻿using Hospital.Shared;
+using Hospital.WebAPI.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.WebAPI.Data;

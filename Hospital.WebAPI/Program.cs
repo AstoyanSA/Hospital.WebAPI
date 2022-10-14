@@ -1,4 +1,5 @@
 using Hospital.WebAPI.Data;
+using Hospital.WebAPI.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HospitalContext>(options =>
     options.UseSqlServer(connectionString));
+
+// DI Repositories
+builder.Services.AddTransient<IPatientRepository, PatientRepository>();
+builder.Services.AddTransient<IDoctorRepository, DoctorRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
