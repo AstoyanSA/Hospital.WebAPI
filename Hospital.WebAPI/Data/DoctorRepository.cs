@@ -2,6 +2,7 @@
 using Hospital.WebAPI.Data.Interfaces;
 using Hospital.WebAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Hospital.WebAPI.Data;
 
@@ -19,17 +20,46 @@ public class DoctorRepository : IDoctorRepository
         var query = await (from d in _db.Doctors
                            join c in _db.Cabinets on d.CabinetId equals c.Id
                            join s in _db.Specializations on d.SpecializationId equals s.Id
-                           join a in _db.Areas on d.AreaId equals a.Id
+                           join a in _db.Areas on d.AreaId equals a.Id into areaDetails 
+                           from area in areaDetails.DefaultIfEmpty()
                            select new
                            {
                                d.Id,
                                d.FullName,
-                               c.Number,
-                               s.Name,
-                               a.AreaNumber
-                           }).ToListAsync();
+                               c.CabNumber,
+                               s.SpecName,
+                               area
+                           })
+                           .ToListAsync();
 
         List<DoctorDto> doctorDto = new();
+
+        foreach (var q in query)
+        {
+            if (q.area == null)
+                doctorDto.Add(
+                    new DoctorDto
+                    {
+                        Id = q.Id,
+                        FullName = q.FullName,
+                        Cabinet = q.CabNumber,
+                        SpecializationName = q.SpecName
+                    }
+                );
+            else
+            {
+                doctorDto.Add(
+                    new DoctorDto
+                    {
+                        Id = q.Id,
+                        FullName = q.FullName,
+                        Cabinet = q.CabNumber,
+                        SpecializationName = q.SpecName,
+                        AreaNumber = q.area.AreaNumber
+                    }
+                );
+            }
+        }
 
         var response = new ServiceResponse<List<DoctorDto>>
         {

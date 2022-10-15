@@ -51,37 +51,37 @@ public class HospitalContext : DbContext
             new Cabinet
             {
                 Id = 1,
-                Number = 4
+                CabNumber = 4
             },
 
             new Cabinet
             {
                 Id = 2,
-                Number = 7
+                CabNumber = 7
             },
 
             new Cabinet
             {
                 Id = 3,
-                Number = 12
+                CabNumber = 12
             },
 
             new Cabinet
             {
                 Id = 4,
-                Number = 6
+                CabNumber = 6
             },
 
             new Cabinet
             {
                 Id = 5,
-                Number = 8
+                CabNumber = 8
             },
 
             new Cabinet
             {
                 Id = 6,
-                Number = 10
+                CabNumber = 10
             }
 
             );
@@ -92,25 +92,25 @@ public class HospitalContext : DbContext
             new Specialization
             {
                 Id = 1,
-                Name = "Педиатрия"
+                SpecName = "Педиатрия"
             },
 
             new Specialization
             {
                 Id = 2,
-                Name = "Хирургия"
+                SpecName = "Хирургия"
             },
 
             new Specialization
             {
                 Id = 3,
-                Name = "Флебология"
+                SpecName = "Флебология"
             },
 
             new Specialization
             {
                 Id = 4,
-                Name = "Колопроктология"
+                SpecName = "Колопроктология"
             }
 
             );

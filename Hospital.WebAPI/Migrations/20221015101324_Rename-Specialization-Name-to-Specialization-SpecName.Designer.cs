@@ -4,6 +4,7 @@ using Hospital.WebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.WebAPI.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    partial class HospitalContextModelSnapshot : ModelSnapshot
+    [Migration("20221015101324_Rename-Specialization-Name-to-Specialization-SpecName")]
+    partial class RenameSpecializationNametoSpecializationSpecName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,7 +70,7 @@ namespace Hospital.WebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CabNumber")
+                    b.Property<int>("Number")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -79,32 +81,32 @@ namespace Hospital.WebAPI.Migrations
                         new
                         {
                             Id = 1,
-                            CabNumber = 4
+                            Number = 4
                         },
                         new
                         {
                             Id = 2,
-                            CabNumber = 7
+                            Number = 7
                         },
                         new
                         {
                             Id = 3,
-                            CabNumber = 12
+                            Number = 12
                         },
                         new
                         {
                             Id = 4,
-                            CabNumber = 6
+                            Number = 6
                         },
                         new
                         {
                             Id = 5,
-                            CabNumber = 8
+                            Number = 8
                         },
                         new
                         {
                             Id = 6,
-                            CabNumber = 10
+                            Number = 10
                         });
                 });
 
