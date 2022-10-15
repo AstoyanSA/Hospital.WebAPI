@@ -1,6 +1,7 @@
 ﻿using Hospital.Shared;
 using Hospital.WebAPI.Data.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace Hospital.WebAPI.Controllers;
 
@@ -15,10 +16,10 @@ public class PatientController : ControllerBase
 		_patientRepository = patientRepository;
 	}
 
-	[HttpGet]
-	public async Task<ActionResult<ServiceResponse<List<Patient>>>> GetPatients(string? sortField = null)
+    [HttpGet]
+	public async Task<ActionResult<ServiceResponse<List<Patient>>>> GetPatients(string? sortField, int? page, int? take)
 	{
-		var result = await _patientRepository.GetPatientsAsync(sortField);
+		var result = await _patientRepository.GetPatientsAsync(sortField, page, take);
 
         return Ok(result);
 	}

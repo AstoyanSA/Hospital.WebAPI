@@ -36,12 +36,12 @@ public class DoctorRepository : IDoctorRepository
         if (!string.IsNullOrWhiteSpace(sortField))
         {
             string sortTrim = sortField.Trim();
+
             if (String.Equals(typeof(DoctorDto)?.GetProperty(sortTrim)?.Name, sortTrim))
             {
-                
-                string? sort = typeof(DoctorDto)?.GetProperty(sortTrim)?.Name.ToLower();
+                string? sortParam = typeof(DoctorDto)?.GetProperty(sortTrim)?.Name.ToLower();
 
-                switch (sort)
+                switch (sortParam)
                 {
                     case "id":
                         query.Sort((d1, d2) => Decimal.Compare(d1.Id, d2.Id));

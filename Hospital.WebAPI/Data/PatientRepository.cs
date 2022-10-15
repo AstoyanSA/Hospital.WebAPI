@@ -14,7 +14,7 @@ public class PatientRepository : IPatientRepository
         _db = db;
     }
 
-    public async Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync(string? sortField)
+    public async Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync(string? sortField, int? page, int? take)
     {
         var query = await (from p in _db.Patients
                            join a in _db.Areas on p.AreaId equals a.Id
