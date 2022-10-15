@@ -22,25 +22,25 @@ public class HospitalContext : DbContext
             new Area
             {
                 Id = 1,
-                Number = 13,
+                AreaNumber = 13,
             },
 
             new Area
             {
                 Id = 2,
-                Number = 4,
+                AreaNumber = 4,
             },
 
             new Area
             {
                 Id = 3,
-                Number = 46,
+                AreaNumber = 46,
             },
 
             new Area
             {
                 Id = 4,
-                Number = 8,
+                AreaNumber = 8,
             }
 
             );

@@ -1,4 +1,5 @@
 ﻿using Hospital.Shared;
+using Hospital.WebAPI.Dtos;
 
 namespace Hospital.WebAPI.Data.Interfaces
 {
@@ -7,7 +8,7 @@ namespace Hospital.WebAPI.Data.Interfaces
         Task<ServiceResponse<string>> AddDoctorAsync(Doctor doctor);
         Task<ServiceResponse<string>> DeleteDoctorAsync(int id);
         Task<ServiceResponse<Doctor>> GetDoctorByIdAsync(int id);
-        Task<ServiceResponse<List<Doctor>>> GetDoctorsAsync();
+        Task<ServiceResponse<List<DoctorDto>>> GetDoctorsAsync();
         Task<ServiceResponse<string>> UpdateDoctorAsync(Doctor doctor);
     }
 }

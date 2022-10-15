@@ -1,5 +1,6 @@
 ﻿using Hospital.Shared;
 using Hospital.WebAPI.Data.Interfaces;
+using Hospital.WebAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.WebAPI.Data;
@@ -13,11 +14,26 @@ public class DoctorRepository : IDoctorRepository
         _db = db;
     }
 
-    public async Task<ServiceResponse<List<Doctor>>> GetDoctorsAsync()
+    public async Task<ServiceResponse<List<DoctorDto>>> GetDoctorsAsync()
     {
-        var response = new ServiceResponse<List<Doctor>>
+        var query = await (from d in _db.Doctors
+                           join c in _db.Cabinets on d.CabinetId equals c.Id
+                           join s in _db.Specializations on d.SpecializationId equals s.Id
+                           join a in _db.Areas on d.AreaId equals a.Id
+                           select new
+                           {
+                               d.Id,
+                               d.FullName,
+                               c.Number,
+                               s.Name,
+                               a.AreaNumber
+                           }).ToListAsync();
+
+        List<DoctorDto> doctorDto = new();
+
+        var response = new ServiceResponse<List<DoctorDto>>
         {
-            Data = await _db.Doctors.ToListAsync()
+            Data = doctorDto
         };
 
         return response;
@@ -65,7 +81,14 @@ public class DoctorRepository : IDoctorRepository
             }
             else
             {
-                _db.Doctors.Add(doctor);
+                _db.Doctors.Add(new Doctor
+                {
+                    FullName = doctor.FullName,
+                    CabinetId = doctor.CabinetId,
+                    SpecializationId = doctor.SpecializationId,
+                    AreaId = doctor.AreaId
+
+                });
                 await _db.SaveChangesAsync();
                 response.Data = "Врач добавлен.";
             }
@@ -86,7 +109,9 @@ public class DoctorRepository : IDoctorRepository
         var response = new ServiceResponse<string>();
         try
         {
-            if (_db.Doctors.Any(x => x.FullName.Trim().ToLower().Equals(doctor.FullName.Trim().ToLower())))
+            if (_db.Doctors.Any(x => x.Id != doctor.Id &&
+                                     x.FullName.Trim().ToLower()
+                                     .Equals(doctor.FullName.Trim().ToLower())))
             {
                 response.Success = false;
                 response.Message = "Врач с такими данными уже существует.";

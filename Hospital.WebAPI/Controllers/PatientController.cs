@@ -34,16 +34,7 @@ public class PatientController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ServiceResponse<string>>> AddPatient(Patient patient)
     {
-        var result = await _patientRepository.AddPatientAsync(new Patient
-        {
-            Surname = patient.Surname,
-            FirstName = patient.FirstName,
-            MiddleName = patient.MiddleName,
-            Address = patient.Address,
-            Birthday = patient.Birthday,
-            Sex = patient.Sex,
-            AreaId = patient.AreaId
-        });
+        var result = await _patientRepository.AddPatientAsync(patient);
 
         return Ok(result);
     }

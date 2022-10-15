@@ -27,7 +27,7 @@ public class PatientRepository : IPatientRepository
                                p.Address,
                                p.Birthday,
                                p.Sex,
-                               a.Number
+                               a.AreaNumber
                            }).ToListAsync();
 
         List<PatientDto> patientDto = new();
@@ -42,7 +42,7 @@ public class PatientRepository : IPatientRepository
                 Address = q.Address,
                 Birthday = q.Birthday,
                 Sex = q.Sex,
-                AreaNumber = q.Number
+                AreaNumber = q.AreaNumber
             });
         }
 
@@ -102,7 +102,16 @@ public class PatientRepository : IPatientRepository
             }
             else
             {
-                _db.Patients.Add(patient);
+                _db.Patients.Add(new Patient
+                {
+                    Surname = patient.Surname,
+                    FirstName = patient.FirstName,
+                    MiddleName = patient.MiddleName,
+                    Address = patient.Address,
+                    Birthday = patient.Birthday,
+                    Sex = patient.Sex,
+                    AreaId = patient.AreaId
+                });
                 await _db.SaveChangesAsync();
                 response.Data = "Пациент добавлен.";
             }
