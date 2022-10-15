@@ -20,6 +20,7 @@ public class PatientRepository : IPatientRepository
                            join a in _db.Areas on p.AreaId equals a.Id
                            select new
                            {
+                               p.Id,
                                p.Surname,
                                p.FirstName,
                                p.MiddleName,
@@ -34,6 +35,7 @@ public class PatientRepository : IPatientRepository
         foreach(var q in query)
         {
             patientDto.Add(new PatientDto {
+                Id = q.Id,
                 Surname = q.Surname,
                 FirstName = q.FirstName,
                 MiddleName = q.MiddleName,
