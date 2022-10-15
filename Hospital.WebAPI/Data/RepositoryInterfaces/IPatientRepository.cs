@@ -8,7 +8,7 @@ namespace Hospital.WebAPI.Data.Interfaces
         Task<ServiceResponse<string>> AddPatientAsync(Patient patient);
         Task<ServiceResponse<string>> DeletePatientAsync(int id);
         Task<ServiceResponse<Patient>> GetPatientByIdAsync(int id);
-        Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync();
+        Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync(string? sortField);
         Task<ServiceResponse<string>> UpdatePatientAsync(Patient patient);
     }
 }

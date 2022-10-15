@@ -2,7 +2,6 @@
 using Hospital.WebAPI.Data.Interfaces;
 using Hospital.WebAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Hospital.WebAPI.Data;
 
@@ -116,7 +115,7 @@ public class DoctorRepository : IDoctorRepository
                     FullName = doctor.FullName,
                     CabinetId = doctor.CabinetId,
                     SpecializationId = doctor.SpecializationId,
-                    AreaId = doctor.AreaId
+                    AreaId = doctor.AreaId == 0 ? null : doctor.AreaId
 
                 });
                 await _db.SaveChangesAsync();

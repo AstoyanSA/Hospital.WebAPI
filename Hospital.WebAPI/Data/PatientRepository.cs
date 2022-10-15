@@ -14,7 +14,7 @@ public class PatientRepository : IPatientRepository
         _db = db;
     }
 
-    public async Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync()
+    public async Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync(string? sortField)
     {
         var query = await (from p in _db.Patients
                            join a in _db.Areas on p.AreaId equals a.Id
@@ -31,6 +31,47 @@ public class PatientRepository : IPatientRepository
                            }).ToListAsync();
 
         List<PatientDto> patientDto = new();
+
+        if (!string.IsNullOrWhiteSpace(sortField))
+        {
+            string sortTrim = sortField.Trim();
+            if(String.Equals(typeof(PatientDto)?.GetProperty(sortTrim)?.Name, sortTrim))
+            {
+                //patientDto.Sort((p1, p2) => string.Compare(p1?.GetType()?.GetProperty(sortField)?.GetValue(p1)?.ToString(), p2?.GetType()?.GetProperty(sortField)?.GetValue(p2)?.ToString()));
+                string? sort = typeof(PatientDto)?.GetProperty(sortTrim)?.Name.ToLower();
+
+                switch (sort)
+                {
+                    case "id":
+                        query.Sort((p1, p2) => Decimal.Compare(p1.Id, p2.Id));
+                        break;
+                    case "surname":
+                        query.Sort((p1, p2) => string.Compare(p1.Surname, p2.Surname));
+                        break;
+                    case "firstname":
+                        query.Sort((p1, p2) => string.Compare(p1.FirstName, p2.FirstName));
+                        break;
+                    case "middlename":
+                        query.Sort((p1, p2) => string.Compare(p1.MiddleName, p2.MiddleName));
+                        break;
+                    case "address":
+                        query.Sort((p1, p2) => string.Compare(p1.Address, p2.Address));
+                        break;
+                    case "birthday":
+                        query.Sort((p1, p2) => DateTime.Compare(p1.Birthday, p2.Birthday));
+                        break;
+                    case "sex":
+                        query.Sort((p1, p2) => string.Compare(p1.Sex, p2.Sex));
+                        break;
+                    case "areanumber":
+                        query.Sort((p1, p2) => Decimal.Compare(p1.AreaNumber, p2.AreaNumber));
+                        break;
+                    default:
+                        Console.WriteLine("net");
+                        break;
+                }
+            }
+        }
 
         foreach(var q in query)
         {
