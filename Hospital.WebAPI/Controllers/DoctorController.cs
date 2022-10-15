@@ -16,9 +16,9 @@ public class DoctorController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<ServiceResponse<List<Doctor>>>> GetDoctors()
+	public async Task<ActionResult<ServiceResponse<List<Doctor>>>> GetDoctors(string? sortField = null)
 	{
-		var result = await _doctorRepository.GetDoctorsAsync();
+		var result = await _doctorRepository.GetDoctorsAsync(sortField);
 
 		return Ok(result);
 	}

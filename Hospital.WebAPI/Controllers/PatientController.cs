@@ -15,7 +15,7 @@ public class PatientController : ControllerBase
 		_patientRepository = patientRepository;
 	}
 
-	[HttpGet("{sortField?}")]
+	[HttpGet]
 	public async Task<ActionResult<ServiceResponse<List<Patient>>>> GetPatients(string? sortField = null)
 	{
 		var result = await _patientRepository.GetPatientsAsync(sortField);

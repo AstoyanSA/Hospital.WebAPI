@@ -66,9 +66,6 @@ public class PatientRepository : IPatientRepository
                     case "areanumber":
                         query.Sort((p1, p2) => Decimal.Compare(p1.AreaNumber, p2.AreaNumber));
                         break;
-                    default:
-                        Console.WriteLine("net");
-                        break;
                 }
             }
         }

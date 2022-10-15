@@ -14,7 +14,7 @@ public class DoctorRepository : IDoctorRepository
         _db = db;
     }
 
-    public async Task<ServiceResponse<List<DoctorDto>>> GetDoctorsAsync()
+    public async Task<ServiceResponse<List<DoctorDto>>> GetDoctorsAsync(string? sortField)
     {
         var query = await (from d in _db.Doctors
                            join c in _db.Cabinets on d.CabinetId equals c.Id
@@ -32,6 +32,37 @@ public class DoctorRepository : IDoctorRepository
                            .ToListAsync();
 
         List<DoctorDto> doctorDto = new();
+
+        if (!string.IsNullOrWhiteSpace(sortField))
+        {
+            string sortTrim = sortField.Trim();
+            if (String.Equals(typeof(DoctorDto)?.GetProperty(sortTrim)?.Name, sortTrim))
+            {
+                
+                string? sort = typeof(DoctorDto)?.GetProperty(sortTrim)?.Name.ToLower();
+
+                switch (sort)
+                {
+                    case "id":
+                        query.Sort((d1, d2) => Decimal.Compare(d1.Id, d2.Id));
+                        break;
+                    case "fullname":
+                        query.Sort((d1, d2) => string.Compare(d1.FullName, d2.FullName));
+                        break;
+                    case "cabinet":
+                        query.Sort((d1, d2) => Decimal.Compare(d1.CabNumber, d2.CabNumber));
+                        break;
+                    case "specializationname":
+                        query.Sort((d1, d2) => string.Compare(d1.SpecName, d2.SpecName));
+                        break;
+                    case "areanumber":
+                        query.Sort((d1, d2) => Decimal.Compare(d1.area == null ? 0m : d1.area.AreaNumber,
+                                                               d2.area == null ? 0m : d2.area.AreaNumber));
+                        query.Reverse();
+                        break;
+                }
+            }
+        }
 
         foreach (var q in query)
         {
