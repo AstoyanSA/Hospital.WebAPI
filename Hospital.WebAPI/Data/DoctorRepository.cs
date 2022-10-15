@@ -102,6 +102,8 @@ public class DoctorRepository : IDoctorRepository
                     doc.SpecializationId = doctor.SpecializationId;
                     doc.AreaId = doctor.AreaId;
 
+                    await _db.SaveChangesAsync();
+
                     response.Data = "Данные врача обновлены.";
                 }
                 else

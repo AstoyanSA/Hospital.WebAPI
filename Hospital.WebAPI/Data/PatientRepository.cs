@@ -2,8 +2,6 @@
 using Hospital.WebAPI.Data.Interfaces;
 using Hospital.WebAPI.Dtos;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 
 namespace Hospital.WebAPI.Data;
 
@@ -148,6 +146,8 @@ public class PatientRepository : IPatientRepository
                     pat.Birthday = patient.Birthday;
                     pat.Sex = patient.Sex;
                     pat.AreaId = patient.AreaId;
+
+                    await _db.SaveChangesAsync();
 
                     response.Data = "Данные пациента обновлены";
                 }

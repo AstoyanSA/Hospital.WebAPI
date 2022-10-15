@@ -1,6 +1,5 @@
 ﻿using Hospital.Shared;
 using Hospital.WebAPI.Data.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.WebAPI.Controllers;
@@ -35,7 +34,16 @@ public class PatientController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ServiceResponse<string>>> AddPatient(Patient patient)
     {
-        var result = await _patientRepository.AddPatientAsync(patient);
+        var result = await _patientRepository.AddPatientAsync(new Patient
+        {
+            Surname = patient.Surname,
+            FirstName = patient.FirstName,
+            MiddleName = patient.MiddleName,
+            Address = patient.Address,
+            Birthday = patient.Birthday,
+            Sex = patient.Sex,
+            AreaId = patient.AreaId
+        });
 
         return Ok(result);
     }

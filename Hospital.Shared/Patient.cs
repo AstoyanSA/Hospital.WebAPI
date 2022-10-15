@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Hospital.Shared;
 
 public class Patient
 {
-    [JsonIgnore]
     public int Id { get; set; }
     public string Surname { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
