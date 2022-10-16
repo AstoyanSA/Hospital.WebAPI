@@ -14,7 +14,7 @@ public class PatientRepository : IPatientRepository
         _db = db;
     }
 
-    public async Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync(string? sortField, int? page, int? take)
+    public async Task<ServiceResponse<List<PatientDto>>> GetPatientsAsync(string? sortField, int page, int count)
     {
         var query = await (from p in _db.Patients
                            join a in _db.Areas on p.AreaId equals a.Id
@@ -86,8 +86,8 @@ public class PatientRepository : IPatientRepository
 
         var response = new ServiceResponse<List<PatientDto>>
         {
-            Data = patientDto
-        };
+            Data = patientDto.Skip((page - 1) * count).Take(count).ToList()
+    };
 
         return response;
     }

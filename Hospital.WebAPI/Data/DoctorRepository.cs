@@ -1,6 +1,7 @@
 ﻿using Hospital.Shared;
 using Hospital.WebAPI.Data.Interfaces;
 using Hospital.WebAPI.Dtos;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.WebAPI.Data;
@@ -14,7 +15,7 @@ public class DoctorRepository : IDoctorRepository
         _db = db;
     }
 
-    public async Task<ServiceResponse<List<DoctorDto>>> GetDoctorsAsync(string? sortField)
+    public async Task<ServiceResponse<List<DoctorDto>>> GetDoctorsAsync(string? sortField, int page, int count)
     {
         var query = await (from d in _db.Doctors
                            join c in _db.Cabinets on d.CabinetId equals c.Id
@@ -56,9 +57,8 @@ public class DoctorRepository : IDoctorRepository
                         query.Sort((d1, d2) => string.Compare(d1.SpecName, d2.SpecName));
                         break;
                     case "areanumber":
-                        query.Sort((d1, d2) => Decimal.Compare(d1.area == null ? 0m : d1.area.AreaNumber,
-                                                               d2.area == null ? 0m : d2.area.AreaNumber));
-                        query.Reverse();
+                        query.Sort((d1, d2) => Decimal.Compare(d2.area == null ? 0m : d2.area.AreaNumber,
+                                                               d1.area == null ? 0m : d1.area.AreaNumber));
                         break;
                 }
             }
@@ -93,7 +93,7 @@ public class DoctorRepository : IDoctorRepository
 
         var response = new ServiceResponse<List<DoctorDto>>
         {
-            Data = doctorDto
+            Data = doctorDto.Skip((page - 1) * count).Take(count).ToList()
         };
 
         return response;
