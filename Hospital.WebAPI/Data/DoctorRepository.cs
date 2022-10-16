@@ -134,6 +134,8 @@ public class DoctorRepository : IDoctorRepository
         var response = new ServiceResponse<string>();
         try
         {
+            #region With Check if Doctor with that FullName already Exists
+            /*
             if (_db.Doctors.Any(x => x.FullName.Trim().ToLower().Equals(doctor.FullName.Trim().ToLower())))
             {
                 response.Success = false;
@@ -152,6 +154,19 @@ public class DoctorRepository : IDoctorRepository
                 await _db.SaveChangesAsync();
                 response.Data = "Врач добавлен.";
             }
+            */
+            #endregion
+
+            _db.Doctors.Add(new Doctor
+            {
+                FullName = doctor.FullName,
+                CabinetId = doctor.CabinetId,
+                SpecializationId = doctor.SpecializationId,
+                AreaId = doctor.AreaId == 0 ? null : doctor.AreaId
+
+            });
+            await _db.SaveChangesAsync();
+            response.Data = "Врач добавлен.";
 
             return response;
         }
@@ -169,6 +184,8 @@ public class DoctorRepository : IDoctorRepository
         var response = new ServiceResponse<string>();
         try
         {
+            #region With Check if doctor with that FullName already Exists
+            /*
             if (_db.Doctors.Any(x => x.Id != doctor.Id &&
                                      x.FullName.Trim().ToLower()
                                      .Equals(doctor.FullName.Trim().ToLower())))
@@ -196,6 +213,30 @@ public class DoctorRepository : IDoctorRepository
                     response.Success = false;
                     response.Message = "Такого врача не существует.";
                 }
+            }
+            */
+            #endregion
+
+            var doc = await _db.Doctors.FindAsync(doctor.Id);
+            Console.WriteLine("doc");
+
+            if (doc != null)
+            {
+                Console.WriteLine("est");
+                doc.FullName = doctor.FullName;
+                doc.CabinetId = doctor.CabinetId;
+                doc.SpecializationId = doctor.SpecializationId;
+                doc.AreaId = doctor.AreaId == 0 ? null : doctor.AreaId;
+
+                await _db.SaveChangesAsync();
+
+                response.Data = "Данные врача обновлены.";
+            }
+            else
+            {
+                Console.WriteLine("net");
+                response.Success = false;
+                response.Message = "Такого врача не существует.";
             }
 
             return response;

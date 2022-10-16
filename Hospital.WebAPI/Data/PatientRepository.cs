@@ -127,6 +127,8 @@ public class PatientRepository : IPatientRepository
         var response = new ServiceResponse<string>();
         try
         {
+            #region With Check if the patient with this data alredy exists
+            /*
             if (_db.Patients.Any(x => x.Surname.ToLower().Equals(patient.Surname.ToLower()) &&
                                  x.FirstName.ToLower().Equals(patient.FirstName.ToLower()) &&
                                  x.MiddleName.ToLower().Equals(patient.MiddleName.ToLower()) &&
@@ -153,6 +155,21 @@ public class PatientRepository : IPatientRepository
                 await _db.SaveChangesAsync();
                 response.Data = "Пациент добавлен.";
             }
+            */
+            #endregion
+
+            _db.Patients.Add(new Patient
+            {
+                Surname = patient.Surname,
+                FirstName = patient.FirstName,
+                MiddleName = patient.MiddleName,
+                Address = patient.Address,
+                Birthday = patient.Birthday,
+                Sex = patient.Sex,
+                AreaId = patient.AreaId
+            });
+            await _db.SaveChangesAsync();
+            response.Data = "Пациент добавлен.";
 
             return response;
         }
@@ -170,6 +187,8 @@ public class PatientRepository : IPatientRepository
         var response = new ServiceResponse<string>();
         try
         {
+            #region With Check if the patient with this data alredy exists
+            /*
             if (_db.Patients.Any(x => x.Id != patient.Id &&
                                  x.Surname.ToLower().Equals(patient.Surname.ToLower()) &&
                                  x.FirstName.ToLower().Equals(patient.FirstName.ToLower()) &&
@@ -205,6 +224,30 @@ public class PatientRepository : IPatientRepository
                     response.Success = false;
                     response.Message = "Такого пациента не существует.";
                 }
+            }
+            */
+            #endregion
+
+            var pat = await _db.Patients.FindAsync(patient.Id);
+
+            if (pat != null)
+            {
+                pat.Surname = patient.Surname;
+                pat.FirstName = patient.FirstName;
+                pat.MiddleName = patient.MiddleName;
+                pat.Address = patient.Address;
+                pat.Birthday = patient.Birthday;
+                pat.Sex = patient.Sex;
+                pat.AreaId = patient.AreaId;
+
+                await _db.SaveChangesAsync();
+
+                response.Data = "Данные пациента обновлены";
+            }
+            else
+            {
+                response.Success = false;
+                response.Message = "Такого пациента не существует.";
             }
 
             return response;
